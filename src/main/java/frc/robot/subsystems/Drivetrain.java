@@ -71,6 +71,10 @@ public class Drivetrain extends SubsystemBase {
     drive.tankDrive(leftSpeed, rightSpeed);
   }
 
+  public void arcadeDrive(double speed, double rot){
+    drive.arcadeDrive(speed, rot);
+  }
+
   public String getIdleMode(){
     if(frontL.getIdleMode() == IdleMode.kCoast){
       return "Coast";

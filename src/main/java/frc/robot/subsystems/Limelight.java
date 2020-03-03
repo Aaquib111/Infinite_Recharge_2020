@@ -22,7 +22,8 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Has Targets", getValidTargets());
+    SmartDashboard.putNumber("Distance", getDistance());
   }
 
   NetworkTableEntry ledMode = Constants.ledMode;
@@ -89,5 +90,19 @@ public class Limelight extends SubsystemBase {
     else{
       return false;
     }
+  }
+
+  private double getDistance(){
+    return (Constants.powerPortHeight - Constants.limelightHeight) / Math.tan(Constants.limelightAngle + Constants.ty.getDouble(0.0));
+  }
+
+  //EQUATION GOES HERE
+  //Right now: f(x) = .5x + 2000 <- please change 
+
+  public double getRpm(){
+    return 0.5 * getDistance() + 2000;
+  }
+  private boolean getValidTargets(){
+    return Constants.tv.getDouble(0.) == 0 ? false : true;
   }
 }

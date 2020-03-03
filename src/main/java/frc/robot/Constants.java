@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -41,6 +42,22 @@ public final class Constants {
 
     public static final int WINCH = 0;
     public static final int CLIMB_MOTOR = 9;
+
+    //JOYSTICK BUTTONS
+    public static final int INTAKE_BTN = 1;
+    public static final int FAR_SHOOT_BTN = 14;
+    public static final int INTAKE_SOL_BTN = 3;
+    public static final int CLOSE_SHOOT_BTN = 4;
+    public static final int SWITCH_SHOOT = 5;
+    public static final int CPSOL_BTN = 6;
+    public static final int FEEDER_BTN = 13;
+    public static final int ARMSOL_BTN = 10;
+    public static final int ARMMOTOR_BTN = 9;
+    public static final int WINCH_BTN = 10;
+    public static final int CP_BTN = 11;
+    public static final int DRIVE_MODE_BTN = 6;
+    public static final int FEED_REVERSE_BTN = 12;
+    public static final int AIM_BUTTON = 2;
 
     //DOUBLE SOLENOIDS
     public static final int INTAKE_FORWARD = 4;
@@ -80,7 +97,7 @@ public final class Constants {
     public static final double kvVoltSecondsPerMeter = 1.98;
     public static final double kaVoltSecondsSquaredPerMeter = 0.2;
 
-    // Example value only - as above, this must be tuned for your drive!
+    //Example value only - as above, this must be tuned for your drive!
     public static final double kPDriveVel = 8.5;
 
     //Horizontal distance between wheels --CHANGE
@@ -93,4 +110,14 @@ public final class Constants {
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = 0.7;
-}
+
+    //LIMELIGHT DISTANCE CALCULATIONS -> ALL UNITS IN INCHES
+
+    // Distance between limelight and ground
+    public static final double limelightHeight = 21;
+    // Distance between center of powerport and ground
+    public static final double powerPortHeight = 50;
+    // Angle of limelight - 30 degrees
+    public static final int limelightAngle = 30;
+    
+}   

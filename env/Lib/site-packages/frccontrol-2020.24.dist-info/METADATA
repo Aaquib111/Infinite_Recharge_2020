@@ -1,0 +1,44 @@
+Metadata-Version: 2.1
+Name: frccontrol
+Version: 2020.24
+Summary: Wrappers around Python Control for making development of state-space models for the FIRST Robotics Competition easier
+Home-page: https://github.com/calcmogul/frccontrol
+Author: Tyler Veness
+Maintainer: Tyler Veness
+Maintainer-email: calcmogul@gmail.com
+License: BSD License
+Keywords: frc first robotics control
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: License :: OSI Approved :: BSD License
+Classifier: Operating System :: OS Independent
+Classifier: Topic :: Scientific/Engineering
+Classifier: Programming Language :: Python :: 3
+Requires-Dist: control
+
+frccontrol
+##########
+
+Provides wrappers around Python Control for making development of state-space
+models for the FIRST Robotics Competition easier.
+
+Dependencies
+************
+
+- `Python 3.5 or newer <https://www.python.org/downloads/>`_
+- Python Control
+
+Installation
+************
+
+On Windows, execute::
+
+    py -m pip install frccontrol
+
+On Linux/OSX, execute::
+
+    pip install frccontrol
+
+

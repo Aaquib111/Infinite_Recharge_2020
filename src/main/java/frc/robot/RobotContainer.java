@@ -8,7 +8,6 @@
 package frc.robot;
 
 import java.util.Arrays;
-import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,7 +16,6 @@ import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -26,6 +24,11 @@ import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.TrackTarget;
+import frc.robot.commands.Autonomous.SimpleAuto;
 import frc.robot.subsystems.ClimbSystem;
 import frc.robot.subsystems.ControlPanelSystem;
 import frc.robot.subsystems.Drivetrain;
@@ -50,6 +53,7 @@ public class RobotContainer {
   private Joystick right = new Joystick(Constants.RIGHT_STICK);
   private Joystick gamepad = new Joystick(Constants.GAMEPAD);
 
+  private Command m_simpleAuto = new SimpleAuto(m_drive, m_shoot, m_limelight);
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -58,7 +62,7 @@ public class RobotContainer {
     configureButtonBindings();
 
     m_drive.setDefaultCommand(new RunCommand(
-      () -> m_drive.tankDrive(left.getRawAxis(1), right.getRawAxis(1))));
+      () -> m_drive.tankDrive(gamepad.getRawAxis(1), gamepad.getRawAxis(5)), m_drive));
   }
 
   /**
@@ -68,6 +72,12 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    final JoystickButton aim = new JoystickButton(gamepad, Constants.AIM_BUTTON);
+      aim.whileHeld(new TrackTarget(m_drive));
+    final JoystickButton runIntake = new JoystickButton(gamepad, Constants.INTAKE_BTN);
+      runIntake.whileHeld(new StartEndCommand(() -> m_shoot.runIntake(0.5), () -> m_shoot.runIntake(0), m_shoot));
+    final JoystickButton shoot = new JoystickButton(gamepad, Constants.FAR_SHOOT_BTN);
+      shoot.whileHeld(new Shoot(m_shoot, m_limelight));
   }
 
 
@@ -109,6 +119,7 @@ public class RobotContainer {
     m_drive);
 
     //System.out.println(command);
-    return command.andThen(() -> m_drive.setOutput(0, 0));
+    //return command.andThen(() -> m_drive.setOutput(0, 0));
+    return m_simpleAuto;
   }
 }
