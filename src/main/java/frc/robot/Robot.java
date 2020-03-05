@@ -7,6 +7,12 @@
 
 package frc.robot;
 
+import org.opencv.core.Rect;
+import org.opencv.imgproc.Imgproc;
+
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.vision.VisionThread;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,18 +27,33 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
   private RobotContainer m_robotContainer;
 
+  private static final int IMG_WIDTH = 480;
+  private static final int IMG_HEIGHT = 480;
+
+  private VisionThread visionThread;
+  private double centerX = 0.0;
+
+  private final Object imgLock = new Object();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+    camera.setResolution(IMG_WIDTH, IMG_HEIGHT);
+    visionThread = new VisionThread(camera, new GripPipeline(), pipeline -> {
+      if (!pipeline.filterContoursOutput().isEmpty()) {
+          Rect r = Imgproc.boundingRect(pipeline.filterContoursOutput().get(0));
+          synchronized (imgLock) {
+              centerX = r.x + (r.width / 2);
+          }
+      }
+    });
+    visionThread.start();
   }
 
   /**
@@ -50,6 +71,12 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Time", DriverStation.getInstance().getMatchTime());
+    SmartDashboard.putNumber("Center", centerX);
+    double centerX;
+    synchronized (imgLock) {
+        centerX = this.centerX;
+    }
+    double turn = centerX - (IMG_WIDTH / 2);
   }
 
   /**
