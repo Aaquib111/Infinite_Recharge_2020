@@ -48,7 +48,7 @@ public final class Constants {
     public static final int FAR_SHOOT_BTN = 14;
     public static final int INTAKE_SOL_BTN = 3;
     public static final int CLOSE_SHOOT_BTN = 4;
-    public static final int SWITCH_SHOOT = 5;
+    public static final int SWITCH_SHOOT_BTN = 5;
     public static final int CPSOL_BTN = 6;
     public static final int FEEDER_BTN = 13;
     public static final int ARMSOL_BTN = 10;
@@ -56,8 +56,10 @@ public final class Constants {
     public static final int WINCH_BTN = 10;
     public static final int CP_BTN = 11;
     public static final int DRIVE_MODE_BTN = 6;
-    public static final int FEED_REVERSE_BTN = 12;
-    public static final int AIM_BUTTON = 2;
+    //public static final int FEED_REVERSE_BTN = 12;
+    public static final int AIM_BTN = 2;
+    public static final int ARM_BTM = 7;
+    public static final int INTAKE_REVERSE_BTN = 12;
 
     //DOUBLE SOLENOIDS
     public static final int INTAKE_FORWARD = 4;

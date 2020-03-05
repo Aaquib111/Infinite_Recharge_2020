@@ -130,4 +130,18 @@ public class Drivetrain extends SubsystemBase {
     frontR.setVoltage(rightVolts / 2);
     drive.feed();
   }
+
+  public void switchDrive(){
+    if(frontL.getIdleMode() == IdleMode.kBrake){
+      frontL.setIdleMode(IdleMode.kCoast);
+      frontR.setIdleMode(IdleMode.kCoast);
+      backL.setIdleMode(IdleMode.kCoast);
+      backR.setIdleMode(IdleMode.kCoast);
+    }else{
+      frontL.setIdleMode(IdleMode.kBrake);
+      frontR.setIdleMode(IdleMode.kBrake);
+      backL.setIdleMode(IdleMode.kBrake);
+      backR.setIdleMode(IdleMode.kBrake);
+    }
+  }
 }

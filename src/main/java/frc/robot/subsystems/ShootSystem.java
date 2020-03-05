@@ -20,7 +20,8 @@ import frc.robot.Constants;
 public class ShootSystem extends SubsystemBase {
 
   public DoubleSolenoid shootSolenoid = new DoubleSolenoid(Constants.SHOOTER_FORWARD, Constants.SHOOTER_REVERSE);
-  
+  public DoubleSolenoid intakeSolenoid = new DoubleSolenoid(Constants.INTAKE_FORWARD, Constants.INTAKE_REVERSE);
+
   public CANSparkMax shoot = new CANSparkMax(Constants.SHOOT_MOTOR, MotorType.kBrushless);
   public CANSparkMax feed = new CANSparkMax(Constants.FEED_MOTOR, MotorType.kBrushless);
   public CANSparkMax intake = new CANSparkMax(Constants.INTAKE_MOTOR, MotorType.kBrushless);
