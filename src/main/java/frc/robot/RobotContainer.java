@@ -7,20 +7,10 @@
 
 package frc.robot;
 
-import java.util.Arrays;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
@@ -30,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.ToggleSolenoid;
 import frc.robot.commands.TrackTarget;
+import frc.robot.commands.Autonomous.CloseShoot;
 import frc.robot.commands.Autonomous.SimpleAuto;
 import frc.robot.subsystems.ClimbSystem;
 import frc.robot.subsystems.ControlPanelSystem;
@@ -76,7 +67,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    final JoystickButton runIntake = new JoystickButton(gamepad, Constants.INTAKE_BTN);
+    final JoystickButton runIntake = new JoystickButton(right, Constants.INTAKE_BTN);
       runIntake.whileHeld(new StartEndCommand(() -> m_shoot.runIntake(-0.5), () -> m_shoot.runIntake(0), m_shoot));
     final JoystickButton toggleIntake = new JoystickButton(gamepad, Constants.INTAKE_SOL_BTN);
       toggleIntake.whenPressed(new ToggleSolenoid(m_shoot.intakeSolenoid));
@@ -92,7 +83,9 @@ public class RobotContainer {
       shoot.whileHeld(new Shoot(m_shoot, m_limelight));
     final JoystickButton toggleShoot = new JoystickButton(gamepad, Constants.SWITCH_SHOOT_BTN);
       toggleShoot.whenPressed(new ToggleSolenoid(m_shoot.shootSolenoid));
-      
+    final JoystickButton closeShoot = new JoystickButton(gamepad, Constants.CLOSE_SHOOT_BTN);
+      closeShoot.whileHeld(new CloseShoot(m_drive, m_shoot, 3700));
+
     final JoystickButton runArm = new JoystickButton(gamepad, Constants.ARM_BTM);
       runArm.whileHeld(new StartEndCommand(() -> m_climb.runClimbMotor(0.5), () -> m_climb.runClimbMotor(0), m_climb));
     final JoystickButton runWinch = new JoystickButton(gamepad, Constants.WINCH_BTN);
@@ -119,7 +112,6 @@ public class RobotContainer {
     Trajectory trajectory = m_trajectoryGenerator.getAutonomousTrajectory();
     RamseteCommand command = m_trajectoryGenerator.generateRamseteCommand(trajectory);
 
-    //System.out.println(command);
     return command.andThen(() -> m_drive.setOutput(0, 0));
     //return m_simpleAuto;
   }

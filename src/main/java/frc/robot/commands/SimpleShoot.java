@@ -8,22 +8,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ShootSystem;
 
-public class Shoot extends CommandBase {
+public class SimpleShoot extends CommandBase {
   /**
-   * Creates a new Shoot.
+   * Creates a new SimpleShoot.
    */
   private ShootSystem s;
-  private Limelight l;
-  private double rpm;
+  double rpm;
 
-  public Shoot(ShootSystem s, Limelight l) {
+  public SimpleShoot(ShootSystem s, double rpm) {
     this.s = s;
-    this.l = l;
+    this.rpm = rpm;
   }
-  
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -32,20 +30,19 @@ public class Shoot extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    rpm = l.getRpm();
     if(s.shoot.getEncoder().getVelocity() < rpm){
       s.shoot.set(1);
     }else{
+      s.feed.set(.8);
       s.shoot.set(0);
-      s.feed.set(.7);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    s.shoot.set(0);
     s.feed.set(0);
+    s.shoot.set(0);
   }
 
   // Returns true when the command should end.

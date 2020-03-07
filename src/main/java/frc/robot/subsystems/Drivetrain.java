@@ -42,7 +42,7 @@ public class Drivetrain extends SubsystemBase {
 
   //private AHRS navx = new AHRS(I2C.Port.kMXP);
   private AHRS navx = new AHRS(SPI.Port.kMXP);
-  
+
   public final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.kTrackwidthMeters);
 
   private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(getHeading());
@@ -145,5 +145,27 @@ public class Drivetrain extends SubsystemBase {
       backL.setIdleMode(IdleMode.kBrake);
       backR.setIdleMode(IdleMode.kBrake);
     }
+  }
+
+  //Honestly very inefficient but easy to do
+  public void setBrake(){
+    frontL.setIdleMode(IdleMode.kBrake);
+    frontR.setIdleMode(IdleMode.kBrake);
+    backL.setIdleMode(IdleMode.kBrake);
+    backR.setIdleMode(IdleMode.kBrake);
+  }
+
+  public void setCoast(){
+    frontL.setIdleMode(IdleMode.kCoast);
+    frontR.setIdleMode(IdleMode.kCoast);
+    backL.setIdleMode(IdleMode.kCoast);
+    backR.setIdleMode(IdleMode.kCoast);
+  }
+
+  public void resetEncoders(){
+    frontL.getEncoder().setPosition(0);
+    frontR.getEncoder().setPosition(0);
+    backL.getEncoder().setPosition(0);
+    backR.getEncoder().setPosition(0);
   }
 }
