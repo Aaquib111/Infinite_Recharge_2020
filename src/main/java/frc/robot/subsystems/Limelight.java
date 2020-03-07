@@ -93,7 +93,8 @@ public class Limelight extends SubsystemBase {
   }
 
   private double getDistance(){
-    return (Constants.powerPortHeight - Constants.limelightHeight) / Math.tan(Constants.limelightAngle + Constants.ty.getDouble(0.0));
+    double radians = Math.toRadians(Constants.ty.getDouble(0.0));
+    return (Constants.powerPortHeight - Constants.limelightHeight) / Math.tan(Constants.limelightAngle + radians);
   }
 
   //EQUATION GOES HERE

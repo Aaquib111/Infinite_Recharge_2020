@@ -57,7 +57,7 @@ public final class Constants {
     public static final int CP_BTN = 11;
     public static final int DRIVE_MODE_BTN = 6;
     //public static final int FEED_REVERSE_BTN = 12;
-    public static final int AIM_BTN = 2;
+    public static final int AIM_BTN = 1;
     public static final int ARM_BTM = 7;
     public static final int INTAKE_REVERSE_BTN = 12;
 
@@ -118,8 +118,8 @@ public final class Constants {
     // Distance between limelight and ground
     public static final double limelightHeight = 21;
     // Distance between center of powerport and ground
-    public static final double powerPortHeight = 50;
+    public static final double powerPortHeight = 96;
     // Angle of limelight - 30 degrees
-    public static final int limelightAngle = 30;
+    public static final double limelightAngle = 0.523599;
     
 }   

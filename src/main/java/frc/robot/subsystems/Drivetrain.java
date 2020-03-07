@@ -13,6 +13,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -39,8 +40,9 @@ public class Drivetrain extends SubsystemBase {
 
   private DifferentialDrive drive = new DifferentialDrive(left, right);
 
-  private AHRS navx = new AHRS(I2C.Port.kMXP);
-
+  //private AHRS navx = new AHRS(I2C.Port.kMXP);
+  private AHRS navx = new AHRS(SPI.Port.kMXP);
+  
   public final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(Constants.kTrackwidthMeters);
 
   private final DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(getHeading());

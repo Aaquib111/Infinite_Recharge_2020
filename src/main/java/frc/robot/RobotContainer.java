@@ -51,6 +51,8 @@ public class RobotContainer {
   public ClimbSystem m_climb = new ClimbSystem();
   public ControlPanelSystem m_control = new ControlPanelSystem();
 
+  public TrajectoryGeneration m_trajectoryGenerator = new TrajectoryGeneration(m_drive);
+
   private Joystick left = new Joystick(Constants.LEFT_STICK);
   private Joystick right = new Joystick(Constants.RIGHT_STICK);
   private Joystick gamepad = new Joystick(Constants.GAMEPAD);
@@ -75,14 +77,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     final JoystickButton runIntake = new JoystickButton(gamepad, Constants.INTAKE_BTN);
-      runIntake.whileHeld(new StartEndCommand(() -> m_shoot.runIntake(0.5), () -> m_shoot.runIntake(0), m_shoot));
+      runIntake.whileHeld(new StartEndCommand(() -> m_shoot.runIntake(-0.5), () -> m_shoot.runIntake(0), m_shoot));
     final JoystickButton toggleIntake = new JoystickButton(gamepad, Constants.INTAKE_SOL_BTN);
       toggleIntake.whenPressed(new ToggleSolenoid(m_shoot.intakeSolenoid));
     final JoystickButton reverse = new JoystickButton(gamepad, Constants.INTAKE_REVERSE_BTN);
-      reverse.whileHeld(new StartEndCommand(() -> m_shoot.runIntake(-.5), () -> m_shoot.runIntake(0), m_shoot));
+      reverse.whileHeld(new StartEndCommand(() -> m_shoot.runIntake(.5), () -> m_shoot.runIntake(0), m_shoot));
     final JoystickButton feed = new JoystickButton(gamepad, Constants.FEEDER_BTN);
       feed.whileHeld(new StartEndCommand(() -> m_shoot.runFeed(0.5), () -> m_shoot.runFeed(0), m_shoot));
-    final JoystickButton aim = new JoystickButton(gamepad, Constants.AIM_BTN);
+    final JoystickButton feedReverse = new JoystickButton(gamepad, Constants.FEEDER_BTN);
+      feedReverse.whileHeld(new StartEndCommand(() -> m_shoot.runFeed(-0.5), () -> m_shoot.runFeed(0), m_shoot));
+    final JoystickButton aim = new JoystickButton(left, Constants.AIM_BTN);
       aim.whileHeld(new TrackTarget(m_drive));
     final JoystickButton shoot = new JoystickButton(gamepad, Constants.FAR_SHOOT_BTN);
       shoot.whileHeld(new Shoot(m_shoot, m_limelight));
@@ -111,40 +115,12 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    var autoVoltageConstraint =
-    new DifferentialDriveVoltageConstraint(
-        new SimpleMotorFeedforward(Constants.kMaxSpeedMetersPerSecond,
-                                   Constants.kMaxAccelerationMetersPerSecondSquared,
-                                   Constants.kaVoltSecondsSquaredPerMeter),
-        m_drive.getKinematics(),
-        10);
-
-    TrajectoryConfig config = new TrajectoryConfig(Units.feetToMeters(11), Units.feetToMeters(2));
-    config.setKinematics(m_drive.getKinematics());
-    config.addConstraint(autoVoltageConstraint);
-
-    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                              Arrays.asList(
-                              new Pose2d(), 
-                              new Pose2d(1.0, 0, new Rotation2d())
-                              ),
-                              config);
-                              
-    RamseteCommand command = new RamseteCommand(
-    trajectory, 
-    m_drive::getPose, 
-    new RamseteController(2.,.7),
-    m_drive.getFeedForward(),
-    m_drive.getKinematics(),
-    m_drive::getSpeeds,
-    m_drive.getLeftPIDController(), 
-    m_drive.getRightPIDController(),
-    m_drive::setOutput, 
-    m_drive);
+  public Command getAutonomousCommand() {     
+    Trajectory trajectory = m_trajectoryGenerator.getAutonomousTrajectory();
+    RamseteCommand command = m_trajectoryGenerator.generateRamseteCommand(trajectory);
 
     //System.out.println(command);
-    //return command.andThen(() -> m_drive.setOutput(0, 0));
-    return m_simpleAuto;
+    return command.andThen(() -> m_drive.setOutput(0, 0));
+    //return m_simpleAuto;
   }
 }
